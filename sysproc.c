@@ -1,7 +1,6 @@
 #include "types.h"
 #include "x86.h"
 #include "defs.h"
-#include "date.h"
 #include "param.h"
 #include "memlayout.h"
 #include "mmu.h"
@@ -88,4 +87,13 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int sys_getproc(void)
+{
+	int sadd;
+	
+  	if(argint(0, &sadd) < 0)
+    		return -1;
+	return(getproc(sadd));
 }

@@ -463,3 +463,33 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+int getproc(int sadd)
+{
+	struct procentry
+	{
+		int id;
+		char state[10];
+		char name[16];
+	} *p;
+	p= (struct procentry*)sadd;
+	struct proc *pe;
+	int no=0;
+	for(pe=ptable.proc;pe<&ptable.proc[NPROC];pe++)
+	{
+	if ( pe->state == SLEEPING || pe->state==RUNNABLE || pe->state==RUNNING)
+	{
+		p->id = pe->pid;
+		safestrcpy(p->name,pe->name,sizeof(pe->name));
+		if(pe->state == SLEEPING)	
+			safestrcpy(p->state,"SLEEPING",sizeof("SLEEPING"));
+		if(pe->state == RUNNABLE)	
+			safestrcpy(p->state,"RUNNABLE",sizeof("RUNNABLE"));
+		if(pe->state == RUNNING)	
+			safestrcpy(p->state,"RUNNING",sizeof("RUNNING"));
+		p++;
+		no++;
+	}
+	}
+	return no++;
+}
