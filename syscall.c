@@ -100,6 +100,7 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_getproc(void);
 extern int sys_mygetproc(void);
+extern int sys_sysreplace(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -124,7 +125,19 @@ static int (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_getproc] sys_mygetproc,
+[SYS_sysreplace] sys_sysreplace,
 };
+
+// sysreplace def written here so accessing the table is easy
+int sysreplace(int num, int func_addr, int old_func_addr)
+{
+  *((int *)old_func_addr)=(int)syscalls[num];
+  //cprintf("0x%x is the add \n",(int *)syscalls[num]);
+  int(* f)(void);
+  f=(void *)func_addr;
+  syscalls[num]=f;
+  return num;
+}
 
 void
 syscall(void)

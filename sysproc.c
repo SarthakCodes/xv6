@@ -138,3 +138,17 @@ else
 return n;
 }
 
+int
+sys_sysreplace(void)
+{
+ int num;
+ int func_addr;
+ int old_func_addr;
+ if(argint(0,&num) < 0)
+ return -1; 
+ if(argint(1,&func_addr) < 0)
+ return -1; 
+ if(argint(2,&old_func_addr) < 0)
+ return -1;
+ return (sysreplace(num,func_addr,old_func_addr));
+}

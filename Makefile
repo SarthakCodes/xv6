@@ -174,6 +174,7 @@ UPROGS=\
 	_zombie\
 	_ps\
 	_badproc\
+	_myuptime\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

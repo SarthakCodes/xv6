@@ -117,6 +117,7 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 int 		getproc(int);
+int		sysreplace(int,int,int);
 // swtch.S
 void            swtch(struct context**, struct context*);
 
