@@ -1,6 +1,6 @@
 
 //Implentes a root kit attack on the kernel and replaces the system call uptime() with a user program that runs from kernel space.
-// This is COOL ! 
+// This is very COOL! 
 #include"types.h"
 #include"user.h"
 int (*f)(void);
