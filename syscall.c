@@ -101,6 +101,7 @@ extern int sys_uptime(void);
 extern int sys_getproc(void);
 extern int sys_mygetproc(void);
 extern int sys_sysreplace(void);
+extern int sys_findkalloc(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -126,6 +127,7 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_getproc] sys_mygetproc,
 [SYS_sysreplace] sys_sysreplace,
+[SYS_findkalloc] sys_findkalloc,
 };
 
 // sysreplace def written here so accessing the table is easy

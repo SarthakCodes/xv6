@@ -152,3 +152,9 @@ sys_sysreplace(void)
  return -1;
  return (sysreplace(num,func_addr,old_func_addr));
 }
+
+int
+sys_findkalloc(void)
+{
+  return((int)kalloc);
+}

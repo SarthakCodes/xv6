@@ -118,6 +118,7 @@ void            wakeup(void*);
 void            yield(void);
 int 		getproc(int);
 int		sysreplace(int,int,int);
+int		findkalloc(void);
 // swtch.S
 void            swtch(struct context**, struct context*);
 

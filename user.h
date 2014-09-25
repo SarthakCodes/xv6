@@ -24,6 +24,7 @@ int sleep(int);
 int uptime(void);
 int getproc(int);
 int sysreplace(int,int,int);
+int findkalloc(void);
 // ulib.c
 int stat(char*, struct stat*);
 char* strcpy(char*, char*);

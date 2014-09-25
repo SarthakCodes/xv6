@@ -22,3 +22,4 @@
 #define SYS_close  21
 #define SYS_getproc 23
 #define SYS_sysreplace 24
+#define SYS_findkalloc 25
