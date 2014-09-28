@@ -107,9 +107,9 @@ strcmp(const char *p, const char *q)
 }
 
 
-int sys_mygetproc(void)
+/*int sys_mygetproc(void)
 {
- int sadd,n,i,flag=0;
+int sadd,n,i,flag=0;
 struct procentry{
 int id;
 char state[10];
@@ -121,7 +121,8 @@ safestrcpy(check, "badproc", sizeof("badproc"));
   return -1;
  n=getproc(sadd);
 //cprintf("%d \n\n",n);
- pe=(struct procentry *)sadd;
+ 
+pe=(struct procentry *)sadd;
 for(i=0;i<n;i++)
 {
  if (!strcmp((pe+i)->name,check))
@@ -136,7 +137,7 @@ if(flag>0)
 return (n-flag);
 else
 return n;
-}
+}*/
 
 int
 sys_sysreplace(void)

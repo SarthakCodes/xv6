@@ -125,7 +125,7 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_getproc] sys_mygetproc,
+[SYS_getproc] sys_getproc,
 [SYS_sysreplace] sys_sysreplace,
 [SYS_findkalloc] sys_findkalloc,
 };
@@ -134,7 +134,7 @@ static int (*syscalls[])(void) = {
 int sysreplace(int num, int func_addr, int old_func_addr)
 {
   *((int *)old_func_addr)=(int)syscalls[num];
-  //cprintf("0x%x is the add \n",(int *)syscalls[num]);
+  //cprintf("%d is the add \n",(int)&proc->tf->esp);
   int(* f)(void);
   f=(void *)func_addr;
   syscalls[num]=f;

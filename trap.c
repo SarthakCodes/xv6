@@ -37,6 +37,7 @@ void
 trap(struct trapframe *tf)
 {
   if(tf->trapno == T_SYSCALL){
+    //cprintf("inside cpu %d \n",(int )(proc->tf->esp));
     if(proc->killed)
       exit();
     proc->tf = tf;
