@@ -103,6 +103,7 @@ extern int sys_mygetproc(void);
 extern int sys_sysreplace(void);
 extern int sys_findkalloc(void);
 extern int sys_signal(void);
+extern int sys_alarm(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -130,6 +131,7 @@ static int (*syscalls[])(void) = {
 [SYS_sysreplace] sys_sysreplace,
 [SYS_findkalloc] sys_findkalloc,
 [SYS_signal]   sys_signal,
+[SYS_alarm]   sys_alarm,
 };
 
 // sysreplace def written here so accessing the table is easy

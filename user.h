@@ -26,6 +26,7 @@ int getproc(int);
 int sysreplace(int,int,int);
 int findkalloc(void);
 int signal(int,sighandler_t);
+uint alarm(uint);
 // ulib.c
 int stat(char*, struct stat*);
 char* strcpy(char*, char*);

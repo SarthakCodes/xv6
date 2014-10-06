@@ -173,3 +173,12 @@ sys_signal(void)
 	return -1;
 	return(signal(signum,(sighandler_t)handler));	//signal implementation in proc.c
 }
+
+int
+sys_alarm(void)
+{
+ int alarmvalue;
+ if(argint(0, &alarmvalue) < 0)
+  return -1;
+  return (alarm(alarmvalue));
+}

@@ -178,7 +178,8 @@ UPROGS=\
 	_uptime\
 	_myps\
 	_wrapper\
-	_sigtest\
+	_test_sigsegv\
+	_test_sigalarm\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

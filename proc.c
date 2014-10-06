@@ -47,6 +47,11 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->sig_handler[0]=(sighandler_t)-1;
+  p->sig_handler[1]=(sighandler_t)-1;
+  p->sig_handler[2]=(sighandler_t)-1;
+  p->alarmval=-1;
+  p->ticks=0;
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -515,4 +520,15 @@ signal(int signum, sighandler_t handler)
 	   //cprintf("address of handler is 0x%x \n",handler);
 	   return 1;
 	}
+}
+
+uint alarm(uint alarmvalue)
+{
+  if(alarmvalue>0)
+  {
+  proc->alarmval=alarmvalue;
+  return 1;
+  }
+  else
+  return -1;
 }

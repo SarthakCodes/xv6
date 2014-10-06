@@ -55,6 +55,18 @@ trap(struct trapframe *tf)
       wakeup(&ticks);
       release(&tickslock);
     }
+    if(proc && (tf->cs & 3) == 3 && proc->alarmval!=-1 && proc->sig_handler[1]!=(sighandler_t)-1)
+    {
+      proc->ticks++;
+      if(proc->alarmval == proc->ticks)
+      {
+        proc->ticks = 0;
+        *((int *)(tf->esp)-1)=(int)proc->sig_handler[1]; //place handler before eip as argument
+        *((int *)(tf->esp)-2)=tf->eip; //place return address here
+        proc->tf->esp-=8;
+	proc->tf->eip=(uint)proc->sig_handler[2]; //0 before
+      }
+    }
     lapiceoi();
     break;
   case T_IRQ0 + IRQ_IDE:
@@ -89,7 +101,9 @@ trap(struct trapframe *tf)
     }
     // In user space, assume process misbehaved.
  // check if signal handler assigned.
-	if(tf->trapno==14 && proc->sig_handler[0]!=(sighandler_t)-1)
+	else
+	{
+         if(tf->trapno==14 && proc->sig_handler[0]!=(sighandler_t)-1 )
 	{
 		//cprintf("inside the trap \n\n");
 		//cprintf("address of esp is 0x%x \n",(int *)tf->esp);
@@ -104,14 +118,15 @@ trap(struct trapframe *tf)
 		proc->tf->eip=(uint)proc->sig_handler[2]; //0 before
 		//cprintf("inside the trap 2 address of modified esp is 0x%x\n\n",tf->esp);
 	}
-	else
-	{
-    cprintf("pid %d %s: trap %d err %d on cpu %d "
+       else
+     	{
+    	    cprintf("pid %d %s: trap %d err %d on cpu %d "
             "eip 0x%x addr 0x%x--kill proc\n",
             proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip,
             rcr2());
-    proc->killed = 1;
-	}
+    		proc->killed = 1;
+   	}
+        }
   }
 
   // Force process exit if it has been killed and is in user space.
