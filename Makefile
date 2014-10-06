@@ -177,6 +177,8 @@ UPROGS=\
 	_myuptime\
 	_uptime\
 	_myps\
+	_wrapper\
+	_sigtest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

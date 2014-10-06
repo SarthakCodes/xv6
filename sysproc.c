@@ -159,3 +159,17 @@ sys_findkalloc(void)
 {
   return((int)kalloc);
 }
+
+int
+sys_signal(void)
+{
+	int signum;
+	int handler;
+	if(argint(0, &signum) < 0)
+        return -1;
+	if(signum<-1 || signum>1) //signum<0 before
+	return -1;
+	if(argint(1, &handler) < 0)
+	return -1;
+	return(signal(signum,(sighandler_t)handler));	//signal implementation in proc.c
+}

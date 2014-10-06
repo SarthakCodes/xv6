@@ -494,3 +494,25 @@ int getproc(int sadd)
 	}
 	return no++;
 }
+
+//modified signal process definition here
+int
+signal(int signum, sighandler_t handler)
+{
+	if(signum>1 || signum<-1)
+	{
+	   return -1;
+	}
+	else if(signum==-1)
+	{
+	   proc->sig_handler[2]=handler; 
+	   //cprintf("address of wrapper is 0x%x \n",handler);	//no else if block before
+	   return 1;
+	}
+	else
+	{
+	   proc->sig_handler[signum]=handler;
+	   //cprintf("address of handler is 0x%x \n",handler);
+	   return 1;
+	}
+}

@@ -119,6 +119,7 @@ void            yield(void);
 int 		getproc(int);
 int		sysreplace(int,int,int);
 int		findkalloc(void);
+int		signal(int,sighandler_t);
 // swtch.S
 void            swtch(struct context**, struct context*);
 

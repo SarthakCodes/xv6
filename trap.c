@@ -88,11 +88,30 @@ trap(struct trapframe *tf)
       panic("trap");
     }
     // In user space, assume process misbehaved.
+ // check if signal handler assigned.
+	if(tf->trapno==14 && proc->sig_handler[0]!=(sighandler_t)-1)
+	{
+		//cprintf("inside the trap \n\n");
+		//cprintf("address of esp is 0x%x \n",(int *)tf->esp);
+		//cprintf("address of esp arg is 0x%x \n",((int *)(tf->esp)-1));
+		//cprintf("address of esp ret is 0x%x \n",((int *)(tf->esp)-2));
+		*((int *)(tf->esp)-1)=(int)proc->sig_handler[0]; //eip before
+		*((int *)(tf->esp)-2)=tf->eip; //was not there before
+		//cprintf("address of ip is 0x%x \n",tf->eip);
+		//cprintf("value of esp arg is 0x%x \n",*((int *)(tf->esp)-1));
+		//cprintf("value of esp ret is 0x%x \n",*((int *)(tf->esp)-2));
+		proc->tf->esp-=8;
+		proc->tf->eip=(uint)proc->sig_handler[2]; //0 before
+		//cprintf("inside the trap 2 address of modified esp is 0x%x\n\n",tf->esp);
+	}
+	else
+	{
     cprintf("pid %d %s: trap %d err %d on cpu %d "
             "eip 0x%x addr 0x%x--kill proc\n",
-            proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip, 
+            proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip,
             rcr2());
     proc->killed = 1;
+	}
   }
 
   // Force process exit if it has been killed and is in user space.
