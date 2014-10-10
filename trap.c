@@ -7,13 +7,22 @@
 #include "x86.h"
 #include "traps.h"
 #include "spinlock.h"
+#define IO_TIMER2       0x040           // 8253 Timer #1
+#define TIMER_FREQ      1193182
+#define TIMER_DIV(x)    ((TIMER_FREQ+(x)/2)/(x))
+#define TIMER_MODE      (IO_TIMER2 + 3) // timer mode port
+#define TIMER_SEL1      0x00    // select counter 1
+#define TIMER_RATEGEN   0x04    // mode 2, rate generator
+#define TIMER_16BIT     0x30    // r/w counter 16 bits, LSB first
 
+uint mticks;
 // Interrupt descriptor table (shared by all CPUs).
 struct gatedesc idt[256];
 extern uint vectors[];  // in vectors.S: array of 256 entry pointers
 struct spinlock tickslock;
+struct spinlock mtickslock;
 uint ticks;
-
+uint timerflag;
 void
 tvinit(void)
 {
@@ -36,6 +45,33 @@ idtinit(void)
 void
 trap(struct trapframe *tf)
 {
+/* if(timerflag!=1 && cpu->id==0)
+ {
+  timerflag=1;
+  cprintf("timer 0 restarted \n\n");
+  outb(TIMER_MODE, TIMER_SEL1 | TIMER_RATEGEN | TIMER_16BIT);
+  outb(IO_TIMER2,TIMER_DIV(100) % 256);
+  outb(IO_TIMER2,TIMER_DIV(100) / 256);
+ }*/
+/*  if(cpu->id==0)
+  {  
+  outb(TIMER_MODE,LATCH_COUNTER0);
+  LSB=(uint)inb(IO_TIMER1);
+  MSB=(uint)inb(IO_TIMER1);
+  mticks=(MSB<<8)|LSB;
+  mticks=(mticks&0x3f)+(ticks*10000);
+  }
+  if(proc && (tf->cs & 3) == 3 && proc->alarmval!=-1 && proc->sig_handler[1]!=(sighandler_t)-1)
+    {
+      if(proc->alarmval <= (mticks-ticks*10000))
+      {
+        proc->ticks = 0;
+        *((int *)(tf->esp)-1)=(int)proc->sig_handler[1]; //place handler before eip as argument
+        *((int *)(tf->esp)-2)=tf->eip; //place return address here
+        proc->tf->esp-=8;
+	proc->tf->eip=(uint)proc->sig_handler[2]; //0 before
+      }
+    }*/
   if(tf->trapno == T_SYSCALL){
     //cprintf("inside cpu %d \n",(int )(proc->tf->esp));
     if(proc->killed)
@@ -51,6 +87,10 @@ trap(struct trapframe *tf)
   case T_IRQ0 + IRQ_TIMER:
     if(cpu->id == 0){
       acquire(&tickslock);
+      //outb(TIMER_MODE,LATCH_COUNTER0);
+      //LSB=(int)inb(IO_TIMER1);
+      //MSB=(int)inb(IO_TIMER1);
+      //mticks=(MSB<<8)|LSB;
       ticks++;
       wakeup(&ticks);
       release(&tickslock);

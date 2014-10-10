@@ -180,6 +180,7 @@ UPROGS=\
 	_wrapper\
 	_test_sigsegv\
 	_test_sigalarm\
+	_test_softtimer\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

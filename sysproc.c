@@ -5,7 +5,21 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#define IO_TIMER1       0x040           // 8253 Timer #1
 
+// Frequency of all three count-down timers;
+// (TIMER_FREQ/freq) is the appropriate count
+// to generate a frequency of freq Hz.
+
+#define TIMER_FREQ      1193182
+#define TIMER_DIV(x)    ((TIMER_FREQ+(x)/2)/(x))
+
+#define TIMER_MODE      (IO_TIMER1 + 3) // timer mode port
+#define TIMER_SEL0      0x00    // select counter 0
+#define TIMER_RATEGEN   0x04    // mode 2, rate generator
+#define TIMER_16BIT     0x30    // r/w counter 16 bits, LSB first
+
+#define LATCH_COUNTER0 0x00
 int
 sys_fork(void)
 {
@@ -88,7 +102,29 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
-
+//return uptime in microseconds
+int
+sys_microuptime(void)
+{
+int microticks=0;
+if(cpu->id == 0)
+{ 
+//if(!ismp)
+//{ 
+acquire(&mtickslock);
+uint LSB,MSB;
+//for(i=0;i<15;i++)
+//{
+outb(0x43,0x00);
+LSB=(uint)inb(0x40);
+MSB=(uint)inb(0x40);
+microticks=((MSB<<8)|LSB);//+(ticks*10000);//mticks;//+(ticks*10000);
+//cprintf("0x%x , 0x%x ,%d \n",MSB,LSB,microticks);
+//}
+release(&mtickslock); 
+} 
+return microticks;
+}
 int sys_getproc(void)
 {
 	int sadd;
